@@ -21,14 +21,11 @@ export const PrivateRoutesWrapper = ({ children }: PrivateRoutesWrappedProps) =>
         main: { zIndex: 0 },
       }}
     >
-      <AppShell.Navbar p="md" bg="#F3F3F3">
+      <AppShell.Navbar>
         <Navbar />
       </AppShell.Navbar>
 
-      <AppShell.Main
-        style={{ overflowY: 'auto', height: '100vh', paddingTop: '20px' }}
-        bg="#F3F3F3"
-      >
+      <AppShell.Main style={{ overflowY: 'auto', height: '100vh', paddingTop: '20px' }}>
         {children}
       </AppShell.Main>
     </AppShell>
