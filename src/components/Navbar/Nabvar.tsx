@@ -1,5 +1,5 @@
-import { IconChefHat, IconHome } from '@tabler/icons-react';
-import { Button, Group, NavLink, Stack, ThemeIcon, Title } from '@mantine/core';
+import { IconHome } from '@tabler/icons-react';
+import { Group, NavLink, Stack, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Logo } from '../Logo';
 
