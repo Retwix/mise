@@ -1,6 +1,7 @@
 import { IconChefHat, IconHome } from '@tabler/icons-react';
 import { Button, Group, NavLink, Stack, ThemeIcon, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { Logo } from '../Logo';
 
 type NavbarProps = {};
 
@@ -9,7 +10,8 @@ export const Navbar = ({}: NavbarProps) => {
 
   return (
     <Stack py="24" px="12" h="100%" gap={0} pos="relative">
-      <Group mb="xl" align="end">
+      <Group mb="xl" align="center">
+        <Logo size={30} />
         <Title order={2} fw={900}>
           Mise.
         </Title>
