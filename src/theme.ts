@@ -1,5 +1,6 @@
 import { createTheme } from '@mantine/core';
 
 export const theme = createTheme({
-  fontFamily: 'Inter, sans-serif',
+  fontFamily: 'Geist, sans-serif',
+  headings: { fontFamily: 'Geist, sans-serif' },
 });

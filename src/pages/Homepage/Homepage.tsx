@@ -3,9 +3,14 @@ import { Box, Stack, Title } from '@mantine/core';
 export function HomePage() {
   return (
     <Stack>
-      <Box bg="white" w={'100%'} p={'md'} bdrs={8}>
-        <Title order={4}>Dashboard</Title>
-      </Box>
+      <Stack gap={0}>
+        <Title fw={500} order={4}>
+          Dashboard
+        </Title>
+        <Title fw={300} order={6} c="dimmed">
+          Your team’s shifts, delivered.
+        </Title>
+      </Stack>
     </Stack>
   );
 }

@@ -7,7 +7,6 @@ interface PrivateRoutesWrappedProps extends React.PropsWithChildren<{}> {}
 export const PrivateRoutesWrapper = ({ children }: PrivateRoutesWrappedProps) => {
   const [opened, { toggle }] = useDisclosure();
 
-  console.log('ok');
   return (
     <AppShell
       padding="xl"

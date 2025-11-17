@@ -10,11 +10,17 @@ export const Navbar = ({}: NavbarProps) => {
   return (
     <Stack py="24" px="12" h="100%" gap={0} pos="relative">
       <Group mb="xl" align="end">
-        <IconChefHat size={32} />
-        <Title order={5}>Les Comtes de Salmes</Title>
+        <Title order={2} fw={900}>
+          Mise.
+        </Title>
       </Group>
       <Stack>
-        <NavLink bdrs={8} leftSection={<IconHome size={16} stroke={1.5} />} label="Dashboard" />
+        <Stack gap={0}>
+          <Title p={0} fw={300} order={6} c="dimmed">
+            MENU
+          </Title>
+          <NavLink bdrs={8} leftSection={<IconHome size={16} stroke={1.5} />} label="Dashboard" />
+        </Stack>
       </Stack>
     </Stack>
   );
