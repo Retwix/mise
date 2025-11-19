@@ -1,11 +1,10 @@
-import { AppShell, Burger } from '@mantine/core';
+import { Outlet } from 'react-router-dom';
+import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Navbar } from '@/components/Navbar';
 
-interface PrivateRoutesWrappedProps extends React.PropsWithChildren<{}> {}
-
-export const PrivateRoutesWrapper = ({ children }: PrivateRoutesWrappedProps) => {
-  const [opened, { toggle }] = useDisclosure();
+export const PrivateRoutesWrapper = () => {
+  const [opened] = useDisclosure();
 
   return (
     <AppShell
@@ -25,7 +24,7 @@ export const PrivateRoutesWrapper = ({ children }: PrivateRoutesWrappedProps) =>
       </AppShell.Navbar>
 
       <AppShell.Main style={{ overflowY: 'auto', height: '100vh', paddingTop: '20px' }}>
-        {children}
+        <Outlet />
       </AppShell.Main>
     </AppShell>
   );

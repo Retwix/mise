@@ -1,12 +1,10 @@
-import { IconHome } from '@tabler/icons-react';
+import { IconCalendar, IconHome } from '@tabler/icons-react';
+import { useNavigate } from 'react-router-dom';
 import { Group, NavLink, Stack, Title } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
 import { Logo } from '../Logo';
 
-type NavbarProps = {};
-
-export const Navbar = ({}: NavbarProps) => {
-  const [opened, { toggle }] = useDisclosure();
+export const Navbar = () => {
+  const navigate = useNavigate();
 
   return (
     <Stack py="24" px="12" h="100%" gap={0} pos="relative">
@@ -21,7 +19,23 @@ export const Navbar = ({}: NavbarProps) => {
           <Title p={0} fw={300} order={6} c="dimmed">
             MENU
           </Title>
-          <NavLink bdrs={8} leftSection={<IconHome size={16} stroke={1.5} />} label="Dashboard" />
+          <NavLink
+            onClick={() => navigate('/')}
+            bdrs={8}
+            leftSection={<IconHome size={16} stroke={1.5} />}
+            label="Dashboard"
+          />
+        </Stack>
+        <Stack gap={0}>
+          <Title p={0} fw={300} order={6} c="dimmed">
+            OPERATIONS
+          </Title>
+          <NavLink
+            bdrs={8}
+            onClick={() => navigate('/schedule')}
+            leftSection={<IconCalendar size={16} stroke={1.5} />}
+            label="Schedule"
+          />
         </Stack>
       </Stack>
     </Stack>
