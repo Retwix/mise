@@ -7,9 +7,9 @@ import { AuthSuccess } from './AuthSuccess';
 import { LoginForm } from './LoginForm';
 import { VerifyingState } from './VerifyingState';
 
-export function Login() {
-  const { session: isAuthenticated, loading: isSessionLoading } = useAuth();
-  const { isCheckingOTPToken: verifying, authError, authSuccess, clearError } = useMagicLink();
+export const Login = () => {
+  const { hasSession, isLoading: isSessionLoading } = useAuth();
+  const { isCheckingOTPToken, magicLinkError, isMagicLinkValid, clearError } = useMagicLink();
 
   if (isSessionLoading)
     return (
@@ -18,34 +18,28 @@ export function Login() {
       </Center>
     );
 
-  if (isAuthenticated) return <Navigate to="/" replace />;
+  if (hasSession) return <Navigate to="/" replace />;
 
-  // Show verification state
-  if (verifying) {
+  if (isCheckingOTPToken)
     return (
       <Center h="100vh">
         <VerifyingState />
       </Center>
     );
-  }
 
-  // Show auth error
-  if (authError) {
+  if (magicLinkError)
     return (
       <Center h="100vh">
-        <AuthError error={authError} onClear={clearError} />
+        <AuthError error={magicLinkError} onClear={clearError} />
       </Center>
     );
-  }
 
-  // Show auth success (briefly before session loads)
-  if (authSuccess && !isAuthenticated) {
+  if (isMagicLinkValid && !hasSession)
     return (
       <Center h="100vh">
         <AuthSuccess />
       </Center>
     );
-  }
 
   return (
     <Center h="100vh">
@@ -54,4 +48,4 @@ export function Login() {
       </Stack>
     </Center>
   );
-}
+};

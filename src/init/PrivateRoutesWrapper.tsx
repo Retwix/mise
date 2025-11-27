@@ -5,8 +5,8 @@ import { Navbar } from '@/components/Navbar';
 import { useAuth } from '@/hooks/useAuth';
 
 export const PrivateRoutesWrapper = () => {
-  const [opened] = useDisclosure();
-  const { session: isAuthenticated, loading: isSessionLoading } = useAuth();
+  const [isOpened] = useDisclosure();
+  const { hasSession, isLoading: isSessionLoading } = useAuth();
 
   if (isSessionLoading)
     return (
@@ -15,7 +15,7 @@ export const PrivateRoutesWrapper = () => {
       </Center>
     );
 
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (!hasSession) return <Navigate to="/login" replace />;
 
   return (
     <AppShell
@@ -23,7 +23,7 @@ export const PrivateRoutesWrapper = () => {
       navbar={{
         width: 300,
         breakpoint: 'sm',
-        collapsed: { mobile: !opened },
+        collapsed: { mobile: !isOpened },
       }}
       styles={{
         navbar: { zIndex: 10 },

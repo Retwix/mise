@@ -1,7 +1,7 @@
 import { IconCheck } from '@tabler/icons-react';
 import { Alert, Center, Loader, Paper, Stack, Title } from '@mantine/core';
 
-export function AuthSuccess() {
+export const AuthSuccess = () => {
   return (
     <Paper shadow="md" p="xl" radius="md" withBorder maw={400} mx="auto">
       <Stack gap="md" align="center">
@@ -15,4 +15,4 @@ export function AuthSuccess() {
       </Stack>
     </Paper>
   );
-}
+};

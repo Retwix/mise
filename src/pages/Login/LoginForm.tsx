@@ -3,21 +3,20 @@ import { Alert, Button, Paper, Stack, Text, TextInput, Title } from '@mantine/co
 import { useLogin } from '@/hooks/useLogin';
 
 export const LoginForm = () => {
-  const { email, setEmail, loading, error, success, handleLogin } = useLogin();
+  const { loginEmail, setLoginEmail, isLoading, loginError, isSuccess, handleLogin } = useLogin();
 
-  if (success) {
+  if (isSuccess)
     return (
       <Paper shadow="md" p="xl" radius="md" withBorder maw={400} mx="auto">
         <Stack gap="md">
           <Title order={2}>Check your email</Title>
           <Alert icon={<IconCheck size={16} />} title="Magic link sent!" color="green">
-            We've sent a magic link to <strong>{email}</strong>. Click the link in the email to sign
-            in.
+            We've sent a magic link to <strong>{loginEmail}</strong>. Click the link in the email to
+            sign in.
           </Alert>
         </Stack>
       </Paper>
     );
-  }
 
   return (
     <Paper shadow="md" p="xl" radius="md" withBorder maw={400} mx="auto">
@@ -29,9 +28,9 @@ export const LoginForm = () => {
           </Text>
         </Stack>
 
-        {error && (
+        {loginError && (
           <Alert title="Error" color="red">
-            {error}
+            {loginError}
           </Alert>
         )}
 
@@ -41,13 +40,13 @@ export const LoginForm = () => {
               label="Email"
               placeholder="your@email.com"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={loginEmail}
+              onChange={(e) => setLoginEmail(e.target.value)}
               required
-              disabled={loading}
+              disabled={isLoading}
             />
 
-            <Button type="submit" fullWidth loading={loading}>
+            <Button type="submit" fullWidth loading={isLoading}>
               Send magic link
             </Button>
           </Stack>

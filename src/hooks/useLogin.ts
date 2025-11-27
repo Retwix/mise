@@ -3,35 +3,35 @@ import { supabase } from '@/lib/supabase';
 
 export const useLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null);
-    setSuccess(false);
+    setLoginError(null);
+    setIsSuccess(false);
 
     const { error } = await supabase.auth.signInWithOtp({
-      email,
+      email: loginEmail,
       options: {
         emailRedirectTo: window.location.origin,
       },
     });
 
-    if (error) setError(error.message);
-    else setSuccess(true);
+    if (error) setLoginError(error.message);
+    else setIsSuccess(true);
 
     setIsLoading(false);
   };
 
   return {
-    email,
-    setEmail,
-    loading: isLoading,
-    error,
-    success,
+    loginEmail,
+    setLoginEmail,
+    isLoading,
+    loginError,
+    isSuccess,
     handleLogin,
   };
 };

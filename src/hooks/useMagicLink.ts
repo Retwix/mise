@@ -3,15 +3,15 @@ import { supabase } from '@/lib/supabase';
 
 type MagicLinkState = {
   isCheckingOTPToken: boolean;
-  authError: string | null;
-  authSuccess: boolean;
+  magicLinkError: string | null;
+  isMagicLinkValid: boolean;
 };
 
 export const useMagicLink = () => {
   const [state, setState] = useState<MagicLinkState>({
     isCheckingOTPToken: false,
-    authError: null,
-    authSuccess: false,
+    magicLinkError: null,
+    isMagicLinkValid: false,
   });
 
   useEffect(() => {
@@ -33,14 +33,14 @@ export const useMagicLink = () => {
         if (error) {
           setState({
             isCheckingOTPToken: false,
-            authError: error.message,
-            authSuccess: false,
+            magicLinkError: error.message,
+            isMagicLinkValid: false,
           });
         } else {
           setState({
             isCheckingOTPToken: false,
-            authError: null,
-            authSuccess: true,
+            magicLinkError: null,
+            isMagicLinkValid: true,
           });
           // Clear URL params
           window.history.replaceState({}, document.title, '/');
@@ -51,8 +51,8 @@ export const useMagicLink = () => {
   const clearError = () => {
     setState({
       isCheckingOTPToken: false,
-      authError: null,
-      authSuccess: false,
+      magicLinkError: null,
+      isMagicLinkValid: false,
     });
     window.history.replaceState({}, document.title, '/');
   };

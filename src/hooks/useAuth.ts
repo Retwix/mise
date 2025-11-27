@@ -3,13 +3,13 @@ import type { Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 
 export const useAuth = () => {
-  const [session, setSession] = useState<Session | null>(null);
+  const [hasSession, setHasSession] = useState<Session | null>(null);
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     // Get initial sessio
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
+      setHasSession(session);
       setLoading(false);
     });
 
@@ -17,7 +17,7 @@ export const useAuth = () => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
+      setHasSession(session);
       setLoading(false);
     });
 
@@ -26,13 +26,13 @@ export const useAuth = () => {
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    setSession(null);
+    setHasSession(null);
   };
 
   return {
-    session,
-    loading: isLoading,
+    hasSession,
+    isLoading,
+    user: hasSession?.user ?? null,
     signOut,
-    user: session?.user ?? null,
   };
 };

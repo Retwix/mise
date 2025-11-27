@@ -1,12 +1,12 @@
 import { IconX } from '@tabler/icons-react';
 import { Alert, Button, Paper, Stack, Title } from '@mantine/core';
 
-interface AuthErrorProps {
+type AuthErrorProps = {
   error: string;
   onClear: () => void;
-}
+};
 
-export function AuthError({ error, onClear }: AuthErrorProps) {
+export const AuthError = ({ error, onClear }: AuthErrorProps) => {
   return (
     <Paper shadow="md" p="xl" radius="md" withBorder maw={400} mx="auto">
       <Stack gap="md">
@@ -20,4 +20,4 @@ export function AuthError({ error, onClear }: AuthErrorProps) {
       </Stack>
     </Paper>
   );
-}
+};
