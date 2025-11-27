@@ -4,10 +4,10 @@ import { supabase } from '@/lib/supabase';
 
 export const useAuth = () => {
   const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
+    // Get initial sessio
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setLoading(false);
@@ -31,7 +31,7 @@ export const useAuth = () => {
 
   return {
     session,
-    loading,
+    loading: isLoading,
     signOut,
     user: session?.user ?? null,
   };

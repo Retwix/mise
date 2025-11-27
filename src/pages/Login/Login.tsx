@@ -9,7 +9,7 @@ import { VerifyingState } from './VerifyingState';
 
 export function Login() {
   const { session: isAuthenticated, loading: isSessionLoading } = useAuth();
-  const { verifying, authError, authSuccess, clearError } = useMagicLink();
+  const { isCheckingOTPToken: verifying, authError, authSuccess, clearError } = useMagicLink();
 
   if (isSessionLoading)
     return (

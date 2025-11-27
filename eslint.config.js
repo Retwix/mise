@@ -1,4 +1,10 @@
+import tsParser from '@typescript-eslint/parser';
 import mantine from 'eslint-config-mantine';
+import importPlugin from 'eslint-plugin-import';
+import prettierPlugin from 'eslint-plugin-prettier';
+import reactHooks from 'eslint-plugin-react-hooks';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import unusedImports from 'eslint-plugin-unused-imports';
 import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 
@@ -13,13 +19,29 @@ export default defineConfig(
   },
   {
     languageOptions: {
+      parser: tsParser,
       parserOptions: {
         tsconfigRootDir: process.cwd(),
         project: ['./tsconfig.json'],
       },
     },
-    extends: ['airbnb', 'airbnb-typescript', 'prettier'],
+    plugins: {
+      import: importPlugin,
+      'unused-imports': unusedImports,
+      'simple-import-sort': simpleImportSort,
+      prettier: prettierPlugin,
+      'react-hooks': reactHooks,
+    },
+    settings: {
+      'import/resolver': {
+        typescript: {
+          alwaysTryTypes: true,
+          project: './tsconfig.json',
+        },
+      },
+    },
     rules: {
+      curly: 'off',
       'jsx-a11y/no-static-element-interactions': 'off',
       'jsx-a11y/click-events-have-key-events': 'off',
       'jsx-a11y/media-has-caption': 'off',
@@ -39,8 +61,8 @@ export default defineConfig(
         },
       ],
       'import/no-cycle': 'off',
-      'simple-import-sort/imports': 'error',
-      'simple-import-sort/exports': 'error',
+      'simple-import-sort/imports': 'off',
+      'simple-import-sort/exports': 'off',
       'linebreak-style': 'off',
       'global-require': 'off',
       'no-restricted-globals': 'off',
@@ -115,20 +137,7 @@ export default defineConfig(
       'import/prefer-default-export': 'off',
       'import/no-extraneous-dependencies': ['off', { packageDir: ['config/*.js'] }],
       'no-console': ['warn', { allow: ['warn', 'error', 'assert'] }],
-      'prettier/prettier': [
-        'error',
-        {
-          arrowParens: 'avoid',
-          bracketSpacing: true,
-          bracketSameLine: false,
-          printWidth: 100,
-          tabWidth: 2,
-          semi: true,
-          singleQuote: true,
-          trailingComma: 'all',
-          endOfLine: 'auto',
-        },
-      ],
+      'prettier/prettier': 'error',
       'react/destructuring-assignment': ['error', 'always'],
     },
   }

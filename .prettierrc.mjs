@@ -3,6 +3,7 @@ const config = {
   printWidth: 100,
   singleQuote: true,
   trailingComma: 'es5',
+  arrowParens: 'avoid',
   plugins: ['@ianvs/prettier-plugin-sort-imports'],
   importOrder: [
     '.*styles.css$',
