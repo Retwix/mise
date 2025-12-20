@@ -1,5 +1,6 @@
 import { IconCheck } from '@tabler/icons-react';
-import { Alert, Button, Paper, Stack, Text, TextInput, Title } from '@mantine/core';
+import { Alert, Button, Center, Paper, Stack, Text, TextInput, Title } from '@mantine/core';
+import { Logo } from '@/components/Logo';
 import { useLogin } from '@/hooks/useLogin';
 
 export const LoginForm = () => {
@@ -22,7 +23,10 @@ export const LoginForm = () => {
     <Paper shadow="md" p="xl" radius="md" withBorder maw={400} mx="auto">
       <Stack gap="md">
         <Stack gap={0}>
-          <Title order={2}>Welcome to Mise</Title>
+          <Center mb="lg">
+            <Logo size={80} />
+          </Center>
+          <Title order={2}>Welcome to Mise.</Title>
           <Text c="dimmed" size="sm" mt={5}>
             Sign in via magic link with your email
           </Text>
@@ -41,7 +45,7 @@ export const LoginForm = () => {
               placeholder="your@email.com"
               type="email"
               value={loginEmail}
-              onChange={(e) => setLoginEmail(e.target.value)}
+              onChange={e => setLoginEmail(e.target.value)}
               required
               disabled={isLoading}
             />
