@@ -1,10 +1,21 @@
-import { Outlet } from 'react-router-dom';
-import { AppShell } from '@mantine/core';
+import { Navigate, Outlet } from 'react-router-dom';
+import { AppShell, Center, Loader } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Navbar } from '@/components/Navbar';
+import { useAuth } from '@/hooks/useAuth';
 
 export const PrivateRoutesWrapper = () => {
-  const [opened] = useDisclosure();
+  const [isOpened] = useDisclosure();
+  const { hasSession, isLoading: isSessionLoading } = useAuth();
+
+  if (isSessionLoading)
+    return (
+      <Center h="100vh">
+        <Loader size="lg" />
+      </Center>
+    );
+
+  if (!hasSession) return <Navigate to="/login" replace />;
 
   return (
     <AppShell
@@ -12,7 +23,7 @@ export const PrivateRoutesWrapper = () => {
       navbar={{
         width: 300,
         breakpoint: 'sm',
-        collapsed: { mobile: !opened },
+        collapsed: { mobile: !isOpened },
       }}
       styles={{
         navbar: { zIndex: 10 },
