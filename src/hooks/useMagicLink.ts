@@ -22,7 +22,7 @@ export const useMagicLink = () => {
 
     if (tokenHash === null) return;
 
-    setState((prev) => ({ ...prev, isCheckingOTPToken: true }));
+    setState(prev => ({ ...prev, isCheckingOTPToken: true }));
     // Verify the OTP token
     supabase.auth
       .verifyOtp({
