@@ -21,6 +21,7 @@
     "storybook:build": "storybook build"
   },
   "dependencies": {
+    "@emotion/css": "^11.13.5",
     "@mantine/core": "8.3.7",
     "@mantine/hooks": "8.3.7",
     "@supabase/supabase-js": "^2.86.0",

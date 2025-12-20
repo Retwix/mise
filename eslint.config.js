@@ -129,11 +129,7 @@ export default defineConfig(
       '@typescript-eslint/semi': 'off',
       'no-underscore-dangle': 'off',
       'no-constant-condition': 'warn',
-      'import/extensions': [
-        'error',
-        'ignorePackages',
-        { js: 'never', jsx: 'never', ts: 'never', tsx: 'never' },
-      ],
+      'import/extensions': 'off',
       'import/prefer-default-export': 'off',
       'import/no-extraneous-dependencies': ['off', { packageDir: ['config/*.js'] }],
       'no-console': ['warn', { allow: ['warn', 'error', 'assert'] }],
