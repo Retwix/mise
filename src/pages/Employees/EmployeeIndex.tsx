@@ -1,19 +1,5 @@
-import {
-  IconArrowDown,
-  IconArrowsLeftRight,
-  IconChefHat,
-  IconChevronCompactDown,
-  IconChevronDown,
-  IconMessageCircle,
-  IconPhoto,
-  IconPlus,
-  IconSearch,
-  IconSettings,
-  IconTrash,
-  IconUser,
-  IconZoom,
-} from '@tabler/icons-react';
-import { Button, Group, Menu, Stack, Text, TextInput } from '@mantine/core';
+import { IconChefHat, IconChevronDown, IconUser, IconZoom } from '@tabler/icons-react';
+import { Button, Group, Menu, Stack, TextInput } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { PageTitle } from '@/components/PageTitle';
 
