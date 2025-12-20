@@ -1,4 +1,4 @@
-import { IconCalendar, IconHome, IconLogout } from '@tabler/icons-react';
+import { IconCalendar, IconHome, IconLogout, IconUser } from '@tabler/icons-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Group, NavLink, Stack, Text, Title } from '@mantine/core';
 import { useAuth } from '@/hooks/useAuth';
@@ -55,7 +55,7 @@ export const Navbar = () => {
             <NavLink
               bdrs={8}
               onClick={() => navigate('/employees')}
-              leftSection={<IconCalendar size={16} stroke={1.5} />}
+              leftSection={<IconUser size={16} stroke={1.5} />}
               label="Employés"
               active={location.pathname === '/employees'}
             />
