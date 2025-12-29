@@ -38,7 +38,6 @@ export const ThemedMantineButton: PartialDeep<MantineTheme> = createTheme({
       },
       styles: {
         root: {
-          color: 'white',
           fontWeight: 500,
         },
       },
