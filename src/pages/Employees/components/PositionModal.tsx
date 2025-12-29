@@ -3,12 +3,12 @@ import { IconChefHat } from '@tabler/icons-react';
 import { Alert, Button, Group, Modal, Stack, Text, TextInput } from '@mantine/core';
 import { useCreatePosition } from '../hooks/use-create-position';
 
-type JobModalProps = {
+type PositionModalProps = {
   isModalOpened: boolean;
   closeModal: () => void;
 };
 
-export const JobModal = ({ isModalOpened, closeModal }: JobModalProps) => {
+export const PositionModal = ({ isModalOpened, closeModal }: PositionModalProps) => {
   const { createPosition, isCreatePositionLoading, createPositionError, resetCreatePositionState } =
     useCreatePosition();
 

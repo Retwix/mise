@@ -3,11 +3,11 @@ import { Button, Group, Menu, Stack, TextInput } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { PageTitle } from '@/components/PageTitle';
 import { EmployeeModal } from './components/EmployeeModal';
-import { JobModal } from './components/JobModal';
+import { PositionModal } from './components/PositionModal';
 
 export const EmployeeIndex = () => {
   const [isEmployeeModalOpen, { open: openEmployee, close: closeEmployee }] = useDisclosure(false);
-  const [isJobModalOpen, { open: openJob, close: closeJob }] = useDisclosure(false);
+  const [isPositionModalOpen, { open: openPosition, close: closePosition }] = useDisclosure(false);
 
   return (
     <>
@@ -32,7 +32,7 @@ export const EmployeeIndex = () => {
                 <Menu.Item onClick={openEmployee} leftSection={<IconUser size={14} />}>
                   Employé
                 </Menu.Item>
-                <Menu.Item onClick={openJob} leftSection={<IconChefHat size={14} />}>
+                <Menu.Item onClick={openPosition} leftSection={<IconChefHat size={14} />}>
                   Poste
                 </Menu.Item>
               </Menu.Dropdown>
@@ -44,7 +44,7 @@ export const EmployeeIndex = () => {
         </Group>
       </Stack>
       <EmployeeModal isModalOpened={isEmployeeModalOpen} closeModal={closeEmployee} />
-      <JobModal isModalOpened={isJobModalOpen} closeModal={closeJob} />
+      <PositionModal isModalOpened={isPositionModalOpen} closeModal={closePosition} />
     </>
   );
 };

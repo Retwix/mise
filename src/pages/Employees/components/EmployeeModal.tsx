@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { IconUser } from '@tabler/icons-react';
 import { Button, Group, Modal, Select, Stack, Text, TextInput } from '@mantine/core';
+import { useLoadPositions } from '../hooks/use-load-positions';
 
 const COMMUNICATION_OPTION = ['Whatsapp', 'Messenger', 'Sms'];
-const JOB_OPTION = ['Manager', 'Salle', 'Bar', 'Cuisine'];
 
 type EmployeeModalProps = {
   isModalOpened: boolean;
@@ -12,6 +12,8 @@ type EmployeeModalProps = {
 
 export const EmployeeModal = ({ isModalOpened, closeModal }: EmployeeModalProps) => {
   const [shouldShowPhoneInput, setShouldShowPhoneInput] = useState(false);
+
+  const { positions } = useLoadPositions();
 
   return (
     <Modal
@@ -29,7 +31,11 @@ export const EmployeeModal = ({ isModalOpened, closeModal }: EmployeeModalProps)
           <TextInput label="Prénom" placeholder="John" />
           <TextInput label="Nom" placeholder="Doe" />
         </Group>
-        <Select label="Poste" placeholder="Manager" data={JOB_OPTION} />
+        <Select
+          label="Poste"
+          placeholder="Manager"
+          data={positions.map(position => position.name)}
+        />
         <Select label="Communication" placeholder="Whatsapp" data={COMMUNICATION_OPTION} />
         {shouldShowPhoneInput && <TextInput label="Téléphone" placeholder="0663398172" />}
         <Group justify="end">
