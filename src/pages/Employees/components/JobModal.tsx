@@ -9,8 +9,10 @@ type JobModalProps = {
 };
 
 export const JobModal = ({ isModalOpened, closeModal }: JobModalProps) => {
+  const { createPosition, isCreatePositionLoading, createPositionError, resetCreatePositionState } =
+    useCreatePosition();
+
   const [positionName, setPositionName] = useState('');
-  const { createPosition, isLoading, error, resetState } = useCreatePosition();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -24,7 +26,7 @@ export const JobModal = ({ isModalOpened, closeModal }: JobModalProps) => {
 
   const handleClose = () => {
     setPositionName('');
-    resetState();
+    resetCreatePositionState();
     closeModal();
   };
 
@@ -41,9 +43,9 @@ export const JobModal = ({ isModalOpened, closeModal }: JobModalProps) => {
     >
       <form onSubmit={handleSubmit}>
         <Stack>
-          {error && (
+          {createPositionError && (
             <Alert title="Erreur" color="red">
-              {error}
+              {createPositionError}
             </Alert>
           )}
           <TextInput
@@ -52,13 +54,13 @@ export const JobModal = ({ isModalOpened, closeModal }: JobModalProps) => {
             value={positionName}
             onChange={e => setPositionName(e.target.value)}
             required
-            disabled={isLoading}
+            disabled={isCreatePositionLoading}
           />
           <Group justify="end">
-            <Button onClick={handleClose} variant="outline" disabled={isLoading}>
+            <Button onClick={handleClose} variant="outline" disabled={isCreatePositionLoading}>
               Annuler
             </Button>
-            <Button type="submit" c="white" loading={isLoading}>
+            <Button type="submit" c="white" loading={isCreatePositionLoading}>
               Sauvegarder
             </Button>
           </Group>
