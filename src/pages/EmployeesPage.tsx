@@ -1,21 +1,30 @@
 import { useEffect, useState } from 'react'
-import { Table, Button, Group, TextInput, Modal, Stack, Title, ActionIcon, CopyButton, Tooltip, Badge } from '@mantine/core'
+import { Table, Button, Group, TextInput, Modal, Stack, Title, ActionIcon, CopyButton, Tooltip, Badge, Text } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { notifications } from '@mantine/notifications'
 import { IconPlus, IconTrash, IconCopy, IconCheck } from '@tabler/icons-react'
+import dayjs from 'dayjs'
 import { supabase } from '../lib/supabase'
 import { ManagerShell } from '../components/AppShell'
 import type { Employee } from '../types'
 
 export function EmployeesPage() {
   const [employees, setEmployees] = useState<Employee[]>([])
+  const [respondedIds, setRespondedIds] = useState<Set<string>>(new Set())
   const [modalOpen, setModalOpen] = useState(false)
 
   const form = useForm({ initialValues: { name: '', email: '', phone: '' } })
 
+  // Next month prefix e.g. "2026-03"
+  const nextMonthPrefix = dayjs().add(1, 'month').format('YYYY-MM')
+
   async function load() {
-    const { data } = await supabase.from('employees').select('*').order('name')
-    setEmployees(data ?? [])
+    const [{ data: emps }, { data: avails }] = await Promise.all([
+      supabase.from('employees').select('*').order('name'),
+      supabase.from('availabilities').select('employee_id').like('date', `${nextMonthPrefix}-%`),
+    ])
+    setEmployees(emps ?? [])
+    setRespondedIds(new Set((avails ?? []).map((a: { employee_id: string }) => a.employee_id)))
   }
 
   useEffect(() => { load() }, [])
@@ -45,7 +54,10 @@ export function EmployeesPage() {
   return (
     <ManagerShell>
       <Group justify="space-between" mb="md">
-        <Title order={3}>Employés</Title>
+        <Stack gap={0}>
+          <Title order={3}>Employés</Title>
+          <Text size="xs" c="dimmed">Disponibilités pour {dayjs().add(1, 'month').format('MMMM YYYY')}</Text>
+        </Stack>
         <Button leftSection={<IconPlus size={16} />} onClick={() => setModalOpen(true)}>Ajouter</Button>
       </Group>
 
@@ -54,6 +66,7 @@ export function EmployeesPage() {
           <Table.Tr>
             <Table.Th>Nom</Table.Th>
             <Table.Th>Email</Table.Th>
+            <Table.Th>Dispos</Table.Th>
             <Table.Th>Lien dispos</Table.Th>
             <Table.Th>Lien planning</Table.Th>
             <Table.Th></Table.Th>
@@ -64,6 +77,12 @@ export function EmployeesPage() {
             <Table.Tr key={emp.id}>
               <Table.Td>{emp.name}</Table.Td>
               <Table.Td>{emp.email ?? '—'}</Table.Td>
+              <Table.Td>
+                {respondedIds.has(emp.id)
+                  ? <Badge color="green">A répondu</Badge>
+                  : <Badge color="gray">En attente</Badge>
+                }
+              </Table.Td>
               <Table.Td>
                 <CopyButton value={dispoUrl(emp.token_dispo)}>
                   {({ copied, copy }) => (
