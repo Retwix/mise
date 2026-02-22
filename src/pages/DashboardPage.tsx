@@ -1,3 +1,5 @@
+import { ManagerShell } from '../components/AppShell'
+
 export function DashboardPage() {
-  return <div>Dashboard</div>
+  return <ManagerShell><div>Dashboard</div></ManagerShell>
 }

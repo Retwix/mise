@@ -1,3 +1,5 @@
+import { ManagerShell } from '../components/AppShell'
+
 export function EmployeesPage() {
-  return <div>Employees</div>
+  return <ManagerShell><div>Employees</div></ManagerShell>
 }

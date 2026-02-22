@@ -1,3 +1,5 @@
+import { ManagerShell } from '../components/AppShell'
+
 export function ShiftTypesPage() {
-  return <div>Shift Types</div>
+  return <ManagerShell><div>Shift Types</div></ManagerShell>
 }
