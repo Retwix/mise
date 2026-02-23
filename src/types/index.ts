@@ -33,10 +33,20 @@ export type Availability = {
   is_unavailable: boolean
 }
 
+export type ShiftRequirement = {
+  id: string
+  shift_type_id: string
+  day_of_week: number // 0=Monday … 6=Sunday
+  required_cooks: number
+  required_waiters: number
+  required_barmen: number
+}
+
 export type Assignment = {
   id: string
   employee_id: string
   schedule_month_id: string
   date: string
   shift_type_id: string
+  is_manual_override?: boolean
 }

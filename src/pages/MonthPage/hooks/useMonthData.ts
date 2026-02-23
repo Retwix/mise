@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../../../lib/supabase'
-import type { Availability, Employee, ScheduleMonth, ShiftType } from '../../../types'
+import type { Availability, Employee, ScheduleMonth, ShiftRequirement, ShiftType } from '../../../types'
 
 async function fetchMonthData(monthId: string) {
   const [
@@ -8,17 +8,20 @@ async function fetchMonthData(monthId: string) {
     { data: emps },
     { data: shifts },
     { data: avails },
+    { data: shiftReqs },
   ] = await Promise.all([
     supabase.from('schedule_months').select('*').eq('id', monthId).single(),
     supabase.from('employees').select('*').order('name'),
     supabase.from('shift_types').select('*').order('start_time'),
     supabase.from('availabilities').select('*'),
+    supabase.from('shift_requirements').select('*'),
   ])
   return {
     scheduleMonth: month as ScheduleMonth,
     employees: (emps ?? []) as Employee[],
     shiftTypes: (shifts ?? []) as ShiftType[],
     availabilities: (avails ?? []) as Availability[],
+    shiftRequirements: (shiftReqs ?? []) as ShiftRequirement[],
   }
 }
 
@@ -33,6 +36,7 @@ export function useMonthData(monthId: string) {
     employees: data?.employees ?? [],
     shiftTypes: data?.shiftTypes ?? [],
     availabilities: data?.availabilities ?? [],
+    shiftRequirements: data?.shiftRequirements ?? [],
     isLoading,
   }
 }

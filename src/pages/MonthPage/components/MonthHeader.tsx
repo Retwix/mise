@@ -8,16 +8,20 @@ dayjs.locale("fr");
 type Props = {
 	scheduleMonth: ScheduleMonth;
 	onGenerate: () => void;
+	onGenerateWithPython: () => void;
 	onPublish: () => void;
 	generating: boolean;
+	generatingWithPython: boolean;
 	publishing: boolean;
 };
 
 export function MonthHeader({
 	scheduleMonth,
 	onGenerate,
+	onGenerateWithPython,
 	onPublish,
 	generating,
+	generatingWithPython,
 	publishing,
 }: Props) {
 	return (
@@ -34,7 +38,10 @@ export function MonthHeader({
 			</Stack>
 			<Group>
 				<Button onClick={onGenerate} loading={generating} variant="outline">
-					Générer le planning
+					Générer (JS)
+				</Button>
+				<Button onClick={onGenerateWithPython} loading={generatingWithPython} variant="outline" color="violet">
+					Générer (OR-Tools)
 				</Button>
 				{scheduleMonth.status === "draft" && (
 					<Button onClick={onPublish} loading={publishing} color="green">

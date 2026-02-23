@@ -9,21 +9,23 @@ import { useMonthData } from './hooks/useMonthData'
 
 export function MonthPage() {
   const { monthId } = useParams<{ monthId: string }>()
-  const { scheduleMonth, employees, shiftTypes, availabilities, isLoading: dataLoading } =
+  const { scheduleMonth, employees, shiftTypes, availabilities, shiftRequirements, isLoading: dataLoading } =
     useMonthData(monthId!)
   const {
     assignments,
     isLoading: assignmentsLoading,
     generate,
+    generateWithPython,
     remove,
     publish,
     generating,
+    generatingWithPython,
     publishing,
     closingCounts,
     maxClosings,
     minClosings,
     totalCounts,
-  } = useAssignments(monthId!, scheduleMonth, employees, shiftTypes, availabilities)
+  } = useAssignments(monthId!, scheduleMonth, employees, shiftTypes, availabilities, shiftRequirements)
 
   if (dataLoading || assignmentsLoading)
     return (
@@ -46,8 +48,10 @@ export function MonthPage() {
       <MonthHeader
         scheduleMonth={scheduleMonth}
         onGenerate={generate}
+        onGenerateWithPython={generateWithPython}
         onPublish={publish}
         generating={generating}
+        generatingWithPython={generatingWithPython}
         publishing={publishing}
       />
       <Grid>

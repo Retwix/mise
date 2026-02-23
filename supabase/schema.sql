@@ -40,6 +40,18 @@ create table availabilities (
   unique(employee_id, date)
 );
 
+-- Shift headcount overrides per shift × day-of-week
+-- e.g. Saturday needs 2 cooks on the afternoon shift instead of the default 1
+create table shift_requirements (
+  id uuid primary key default gen_random_uuid(),
+  shift_type_id uuid not null references shift_types(id) on delete cascade,
+  day_of_week int not null check (day_of_week between 0 and 6), -- 0=Monday … 6=Sunday
+  required_cooks int not null default 0,
+  required_waiters int not null default 0,
+  required_barmen int not null default 0,
+  unique(shift_type_id, day_of_week)
+);
+
 -- Assignments (generated + manually adjustable)
 create table assignments (
   id uuid primary key default gen_random_uuid(),
@@ -47,6 +59,7 @@ create table assignments (
   schedule_month_id uuid not null references schedule_months(id) on delete cascade,
   date text not null, -- "2026-03-15"
   shift_type_id uuid not null references shift_types(id) on delete cascade,
+  is_manual_override boolean not null default false,
   unique(employee_id, date, shift_type_id)
 );
 
@@ -59,6 +72,7 @@ alter table employees enable row level security;
 alter table shift_types enable row level security;
 alter table schedule_months enable row level security;
 alter table availabilities enable row level security;
+alter table shift_requirements enable row level security;
 alter table assignments enable row level security;
 
 -- Manager (authenticated) can do everything
@@ -66,6 +80,7 @@ create policy "manager full access employees" on employees for all to authentica
 create policy "manager full access shift_types" on shift_types for all to authenticated using (true) with check (true);
 create policy "manager full access schedule_months" on schedule_months for all to authenticated using (true) with check (true);
 create policy "manager full access availabilities" on availabilities for all to authenticated using (true) with check (true);
+create policy "manager full access shift_requirements" on shift_requirements for all to authenticated using (true) with check (true);
 create policy "manager full access assignments" on assignments for all to authenticated using (true) with check (true);
 
 -- Anon can read employees (for token lookup on dispo/planning pages)
@@ -76,8 +91,9 @@ create policy "anon read availabilities" on availabilities for select to anon us
 create policy "anon write availabilities" on availabilities for insert to anon with check (true);
 create policy "anon update availabilities" on availabilities for update to anon using (true);
 
--- Anon can read shift_types and published assignments (for planning page)
+-- Anon can read shift_types, shift_requirements and published assignments (for planning page)
 create policy "anon read shift_types" on shift_types for select to anon using (true);
+create policy "anon read shift_requirements" on shift_requirements for select to anon using (true);
 create policy "anon read published assignments" on assignments for select to anon using (
   exists (
     select 1 from schedule_months sm
