@@ -22,7 +22,9 @@ export function generateSchedule(
 
     for (const shift of shiftTypes) {
       const available = employees.filter(e =>
-        !unavailSet.has(`${e.id}:${date}`) && !assignedToday.has(e.id)
+        !unavailSet.has(`${e.id}:${date}`) &&
+        !assignedToday.has(e.id) &&
+        (e.max_shifts_per_month == null || totalCounts[e.id] < e.max_shifts_per_month)
       )
 
       const sorted = [...available].sort((a, b) => {

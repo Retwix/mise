@@ -47,4 +47,15 @@ describe('generateSchedule', () => {
     const day1 = result.filter(a => a.date === '2026-03-01' && a.shift_type_id === 's1')
     expect(day1).toHaveLength(1)
   })
+
+  it('never exceeds max_shifts_per_month for a capped employee', () => {
+    const capped: Employee = { ...emp1, max_shifts_per_month: 3 }
+    const result = generateSchedule([capped, emp2, emp3], [closing], 2026, 3, [])
+    const cappedCount = result.filter(a => a.employee_id === 'e1').length
+    // Alice is capped at 3 — uncapped employees fill the rest
+    expect(cappedCount).toBeLessThanOrEqual(3)
+    // Without the cap Alice would get ~21; uncapped emp2/emp3 must absorb the remaining slots
+    const uncappedTotal = result.filter(a => a.employee_id === 'e2' || a.employee_id === 'e3').length
+    expect(uncappedTotal).toBeGreaterThan(cappedCount)
+  })
 })
