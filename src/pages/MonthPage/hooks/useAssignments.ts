@@ -2,7 +2,7 @@ import { notifications } from '@mantine/notifications'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { generateSchedule } from '../../../lib/algorithm'
 import { supabase } from '../../../lib/supabase'
-import type { Availability, Employee, ScheduleMonth, ShiftRequirement, ShiftType } from '../../../types'
+import type { Availability, Employee, Role, ScheduleMonth, ShiftRequirement, ShiftType } from '../../../types'
 
 /** Compute day-of-week for day 1 of the month, Monday=0 … Sunday=6 */
 function monthStartWeekday(year: number, month: number): number {
@@ -22,6 +22,7 @@ export function useAssignments(
   shiftTypes: ShiftType[],
   availabilities: Availability[],
   shiftRequirements: ShiftRequirement[],
+  roles: Role[],
 ) {
   const queryClient = useQueryClient()
 
@@ -43,7 +44,7 @@ export function useAssignments(
       if (!scheduleMonth) return
       await supabase.from('assignments').delete().eq('schedule_month_id', monthId)
       const [year, month] = scheduleMonth.month.split('-').map(Number)
-      const generated = generateSchedule(employees, shiftTypes, year, month, availabilities)
+      const generated = generateSchedule(employees, shiftTypes, year, month, availabilities, roles)
       const rows = generated.map((a) => ({ ...a, schedule_month_id: monthId }))
       const { error } = await supabase.from('assignments').insert(rows)
       if (error) throw error

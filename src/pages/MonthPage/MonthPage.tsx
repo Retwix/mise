@@ -9,7 +9,7 @@ import { useMonthData } from './hooks/useMonthData'
 
 export function MonthPage() {
   const { monthId } = useParams<{ monthId: string }>()
-  const { scheduleMonth, employees, shiftTypes, availabilities, shiftRequirements, isLoading: dataLoading } =
+  const { scheduleMonth, employees, shiftTypes, availabilities, shiftRequirements, roles, isLoading: dataLoading } =
     useMonthData(monthId!)
   const {
     assignments,
@@ -25,7 +25,7 @@ export function MonthPage() {
     maxClosings,
     minClosings,
     totalCounts,
-  } = useAssignments(monthId!, scheduleMonth, employees, shiftTypes, availabilities, shiftRequirements)
+  } = useAssignments(monthId!, scheduleMonth, employees, shiftTypes, availabilities, shiftRequirements, roles)
 
   if (dataLoading || assignmentsLoading)
     return (
