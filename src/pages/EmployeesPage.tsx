@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Table, Button, Group, TextInput, Modal, Stack, Title, ActionIcon, CopyButton, Tooltip, Badge, Text } from '@mantine/core'
+import { Table, Button, Group, TextInput, Modal, Stack, Title, ActionIcon, CopyButton, Tooltip, Badge, Text, NumberInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { notifications } from '@mantine/notifications'
 import { IconPlus, IconTrash, IconCopy, IconCheck } from '@tabler/icons-react'
@@ -13,7 +13,7 @@ export function EmployeesPage() {
   const [respondedIds, setRespondedIds] = useState<Set<string>>(new Set())
   const [modalOpen, setModalOpen] = useState(false)
 
-  const form = useForm({ initialValues: { name: '', email: '', phone: '' } })
+  const form = useForm({ initialValues: { name: '', email: '', phone: '', max_shifts_per_month: null as number | null } })
 
   // Next month prefix e.g. "2026-03"
   const nextMonthPrefix = dayjs().add(1, 'month').format('YYYY-MM')
@@ -30,7 +30,12 @@ export function EmployeesPage() {
   useEffect(() => { load() }, [])
 
   async function handleAdd(values: typeof form.values) {
-    const { error } = await supabase.from('employees').insert(values)
+    const { error } = await supabase.from('employees').insert({
+      name: values.name,
+      email: values.email || null,
+      phone: values.phone || null,
+      max_shifts_per_month: values.max_shifts_per_month,
+    })
     if (error) { notifications.show({ color: 'red', message: error.message }); return }
     notifications.show({ color: 'green', message: 'Employé ajouté' })
     setModalOpen(false)
@@ -69,6 +74,7 @@ export function EmployeesPage() {
             <Table.Th>Dispos</Table.Th>
             <Table.Th>Lien dispos</Table.Th>
             <Table.Th>Lien planning</Table.Th>
+            <Table.Th>Max/mois</Table.Th>
             <Table.Th></Table.Th>
           </Table.Tr>
         </Table.Thead>
@@ -116,6 +122,23 @@ export function EmployeesPage() {
                 </CopyButton>
               </Table.Td>
               <Table.Td>
+                <NumberInput
+                  value={emp.max_shifts_per_month ?? ''}
+                  min={1}
+                  placeholder="—"
+                  w={70}
+                  size="xs"
+                  styles={{ input: { textAlign: 'center' } }}
+                  onChange={async (val) => {
+                    await supabase
+                      .from('employees')
+                      .update({ max_shifts_per_month: val === '' ? null : Number(val) })
+                      .eq('id', emp.id)
+                    load()
+                  }}
+                />
+              </Table.Td>
+              <Table.Td>
                 <ActionIcon color="red" variant="subtle" onClick={() => handleDelete(emp.id)}>
                   <IconTrash size={16} />
                 </ActionIcon>
@@ -131,6 +154,12 @@ export function EmployeesPage() {
             <TextInput label="Nom" {...form.getInputProps('name')} required />
             <TextInput label="Email" {...form.getInputProps('email')} />
             <TextInput label="Téléphone" {...form.getInputProps('phone')} />
+            <NumberInput
+              label="Max shifts / mois"
+              description="Laisser vide pour aucune limite"
+              min={1}
+              {...form.getInputProps('max_shifts_per_month')}
+            />
             <Button type="submit">Ajouter</Button>
           </Stack>
         </form>
