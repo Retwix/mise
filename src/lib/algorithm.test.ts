@@ -3,9 +3,9 @@ import { describe, it, expect } from 'vitest'
 import { generateSchedule } from './algorithm'
 import type { Employee, ShiftType, Availability } from '../types'
 
-const emp1: Employee = { id: 'e1', name: 'Alice', email: null, phone: null, token_dispo: 't1', token_view: 'v1', created_at: '' }
-const emp2: Employee = { id: 'e2', name: 'Bob', email: null, phone: null, token_dispo: 't2', token_view: 'v2', created_at: '' }
-const emp3: Employee = { id: 'e3', name: 'Carol', email: null, phone: null, token_dispo: 't3', token_view: 'v3', created_at: '' }
+const emp1: Employee = { id: 'e1', name: 'Alice', email: null, phone: null, token_dispo: 't1', token_view: 'v1', created_at: '', max_shifts_per_month: null }
+const emp2: Employee = { id: 'e2', name: 'Bob', email: null, phone: null, token_dispo: 't2', token_view: 'v2', created_at: '', max_shifts_per_month: null }
+const emp3: Employee = { id: 'e3', name: 'Carol', email: null, phone: null, token_dispo: 't3', token_view: 'v3', created_at: '', max_shifts_per_month: null }
 
 const closing: ShiftType = { id: 's1', label: 'Fermeture', start_time: '18:00', end_time: '23:00', required_count: 2, is_closing: true, created_at: '' }
 const opening: ShiftType = { id: 's2', label: 'Ouverture', start_time: '12:00', end_time: '15:00', required_count: 1, is_closing: false, created_at: '' }

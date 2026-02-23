@@ -6,6 +6,7 @@ export type Employee = {
   token_dispo: string
   token_view: string
   created_at: string
+  max_shifts_per_month: number | null
 }
 
 export type ShiftType = {

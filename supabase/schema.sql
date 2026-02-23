@@ -6,7 +6,8 @@ create table employees (
   phone text,
   token_dispo uuid not null default gen_random_uuid(),
   token_view uuid not null default gen_random_uuid(),
-  created_at timestamptz default now()
+  created_at timestamptz default now(),
+  max_shifts_per_month integer
 );
 
 -- Shift types (e.g. "Ouverture 12h-15h", "Fermeture 18h-23h")
@@ -17,7 +18,8 @@ create table shift_types (
   end_time text not null,   -- "15:00"
   required_count int not null default 1,
   is_closing boolean not null default false,
-  created_at timestamptz default now()
+  created_at timestamptz default now(),
+  max_shifts_per_month integer
 );
 
 -- Monthly schedules
