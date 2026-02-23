@@ -13,6 +13,8 @@ export function generateSchedule(
 
   const closingCounts: Record<string, number> = Object.fromEntries(employees.map(e => [e.id, 0]))
   const totalCounts: Record<string, number> = Object.fromEntries(employees.map(e => [e.id, 0]))
+  const streak: Record<string, number> = Object.fromEntries(employees.map(e => [e.id, 0]))
+  const forcedRest: Record<string, number> = Object.fromEntries(employees.map(e => [e.id, 0]))
 
   const result: Omit<Assignment, 'id' | 'schedule_month_id'>[] = []
 
@@ -24,6 +26,7 @@ export function generateSchedule(
       const available = employees.filter(e =>
         !unavailSet.has(`${e.id}:${date}`) &&
         !assignedToday.has(e.id) &&
+        forcedRest[e.id] === 0 &&
         (e.max_shifts_per_month == null || totalCounts[e.id] < e.max_shifts_per_month)
       )
 
@@ -39,6 +42,22 @@ export function generateSchedule(
         assignedToday.add(emp.id)
         totalCounts[emp.id]++
         if (shift.is_closing) closingCounts[emp.id]++
+      }
+    }
+
+    for (const emp of employees) {
+      if (assignedToday.has(emp.id)) {
+        streak[emp.id]++
+        if (streak[emp.id] >= 5) {
+          forcedRest[emp.id] = 2
+          streak[emp.id] = 0
+        }
+      } else {
+        if (forcedRest[emp.id] > 0) {
+          forcedRest[emp.id]--
+        } else {
+          streak[emp.id] = 0
+        }
       }
     }
   }
