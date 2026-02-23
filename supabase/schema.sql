@@ -1,3 +1,18 @@
+-- Roles (contract type: employee, student, manager, …)
+create table roles (
+  id uuid primary key default gen_random_uuid(),
+  name text not null unique,
+  max_hours_per_month integer,
+  created_at timestamptz default now()
+);
+
+-- Jobs (position: cook, waiter, barman, … — used in future sprint)
+create table jobs (
+  id uuid primary key default gen_random_uuid(),
+  name text not null unique,
+  created_at timestamptz default now()
+);
+
 -- Employees
 create table employees (
   id uuid primary key default gen_random_uuid(),
@@ -7,7 +22,9 @@ create table employees (
   token_dispo uuid not null default gen_random_uuid(),
   token_view uuid not null default gen_random_uuid(),
   created_at timestamptz default now(),
-  max_shifts_per_month integer
+  max_shifts_per_month integer,
+  role_id uuid references roles(id) on delete set null,
+  job_id  uuid references jobs(id)  on delete set null
 );
 
 -- Shift types (e.g. "Ouverture 12h-15h", "Fermeture 18h-23h")
@@ -19,7 +36,8 @@ create table shift_types (
   required_count int not null default 1,
   is_closing boolean not null default false,
   created_at timestamptz default now(),
-  max_shifts_per_month integer
+  max_shifts_per_month integer,
+  job_id uuid references jobs(id) on delete set null
 );
 
 -- Monthly schedules
@@ -68,6 +86,8 @@ create table assignments (
 -- ============================================================
 
 -- Enable RLS
+alter table roles enable row level security;
+alter table jobs  enable row level security;
 alter table employees enable row level security;
 alter table shift_types enable row level security;
 alter table schedule_months enable row level security;
@@ -76,6 +96,8 @@ alter table shift_requirements enable row level security;
 alter table assignments enable row level security;
 
 -- Manager (authenticated) can do everything
+create policy "manager full access roles" on roles for all to authenticated using (true) with check (true);
+create policy "manager full access jobs"  on jobs  for all to authenticated using (true) with check (true);
 create policy "manager full access employees" on employees for all to authenticated using (true) with check (true);
 create policy "manager full access shift_types" on shift_types for all to authenticated using (true) with check (true);
 create policy "manager full access schedule_months" on schedule_months for all to authenticated using (true) with check (true);
@@ -85,6 +107,10 @@ create policy "manager full access assignments" on assignments for all to authen
 
 -- Anon can read employees (for token lookup on dispo/planning pages)
 create policy "anon read employees" on employees for select to anon using (true);
+
+-- Anon can read roles and jobs
+create policy "anon read roles" on roles for select to anon using (true);
+create policy "anon read jobs"  on jobs  for select to anon using (true);
 
 -- Anon can read/write availabilities (employee submits via token)
 create policy "anon read availabilities" on availabilities for select to anon using (true);

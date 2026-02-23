@@ -1,3 +1,16 @@
+export type Role = {
+  id: string
+  name: string
+  max_hours_per_month: number | null
+  created_at: string
+}
+
+export type Job = {
+  id: string
+  name: string
+  created_at: string
+}
+
 export type Employee = {
   id: string
   name: string
@@ -7,6 +20,8 @@ export type Employee = {
   token_view: string
   created_at: string
   max_shifts_per_month: number | null
+  role_id: string | null
+  job_id: string | null
 }
 
 export type ShiftType = {
@@ -17,6 +32,7 @@ export type ShiftType = {
   required_count: number
   is_closing: boolean
   created_at: string
+  job_id: string | null
 }
 
 export type ScheduleMonth = {
