@@ -6,6 +6,7 @@ type Props = {
 	closingCounts: Record<string, number>;
 	maxClosings: number;
 	minClosings: number;
+	totalCounts: Record<string, number>;
 };
 
 export function ClosingStatsSidebar({
@@ -13,6 +14,7 @@ export function ClosingStatsSidebar({
 	closingCounts,
 	maxClosings,
 	minClosings,
+	totalCounts,
 }: Props) {
 	return (
 		<Paper withBorder p="md" pos="sticky" top={16}>
@@ -29,12 +31,16 @@ export function ClosingStatsSidebar({
 					)
 					.map((emp) => {
 						const count = closingCounts[emp.id] ?? 0;
+						const total = totalCounts[emp.id] ?? 0;
 						const isHigh =
 							count === maxClosings && maxClosings - minClosings > 2;
 						return (
 							<Group key={emp.id} justify="space-between">
 								<Text size="sm">{emp.name}</Text>
-								<Badge color={isHigh ? "red" : "green"}>{count}</Badge>
+								<Group gap={4}>
+									<Badge color={isHigh ? "red" : "green"} title="Fermetures">{count}</Badge>
+									<Badge color="blue" variant="light" title="Total shifts">{total}</Badge>
+								</Group>
 							</Group>
 						);
 					})}

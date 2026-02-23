@@ -73,6 +73,12 @@ export function useAssignments(
   const maxClosings = Math.max(0, ...Object.values(closingCounts))
   const minClosings = Math.min(0, ...Object.values(closingCounts))
 
+  const totalCounts: Record<string, number> = {}
+  employees.forEach((e) => { totalCounts[e.id] = 0 })
+  assignments.forEach((a) => {
+    totalCounts[a.employee_id] = (totalCounts[a.employee_id] ?? 0) + 1
+  })
+
   return {
     assignments,
     isLoading,
@@ -84,5 +90,6 @@ export function useAssignments(
     closingCounts,
     maxClosings,
     minClosings,
+    totalCounts,
   }
 }

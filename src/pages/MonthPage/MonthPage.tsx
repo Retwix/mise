@@ -22,6 +22,7 @@ export function MonthPage() {
     closingCounts,
     maxClosings,
     minClosings,
+    totalCounts,
   } = useAssignments(monthId!, scheduleMonth, employees, shiftTypes, availabilities)
 
   if (dataLoading || assignmentsLoading)
@@ -65,6 +66,7 @@ export function MonthPage() {
             closingCounts={closingCounts}
             maxClosings={maxClosings}
             minClosings={minClosings}
+            totalCounts={totalCounts}
           />
         </Grid.Col>
       </Grid>
