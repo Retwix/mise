@@ -1,4 +1,5 @@
-import { Center, Grid, Loader, Text } from '@mantine/core'
+import { Alert, Center, Grid, Loader, Text } from '@mantine/core'
+import { IconInfoCircle } from '@tabler/icons-react'
 import { useParams } from 'react-router-dom'
 import { ManagerShell } from '../../components/AppShell'
 import { ClosingStatsSidebar } from './components/ClosingStatsSidebar'
@@ -14,6 +15,8 @@ export function MonthPage() {
   const {
     assignments,
     isLoading: assignmentsLoading,
+    compromiseMessage,
+    dismissCompromise,
     generate,
     generateWithPython,
     remove,
@@ -54,6 +57,18 @@ export function MonthPage() {
         generatingWithPython={generatingWithPython}
         publishing={publishing}
       />
+      {compromiseMessage && (
+        <Alert
+          icon={<IconInfoCircle size={16} />}
+          color="yellow"
+          title="Compromis appliqué par l'IA"
+          withCloseButton
+          onClose={dismissCompromise}
+          mb="md"
+        >
+          {compromiseMessage}
+        </Alert>
+      )}
       <Grid>
         <Grid.Col span={9}>
           <ScheduleGrid

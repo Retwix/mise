@@ -1,4 +1,5 @@
 import { notifications } from '@mantine/notifications'
+import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { generateSchedule } from '../../../lib/algorithm'
 import { supabase } from '../../../lib/supabase'
@@ -25,6 +26,7 @@ export function useAssignments(
   roles: Role[],
 ) {
   const queryClient = useQueryClient()
+  const [compromiseMessage, setCompromiseMessage] = useState<string | null>(null)
 
   const { data: assignments = [], isLoading } = useQuery({
     queryKey: ['assignments', monthId],
@@ -109,7 +111,7 @@ export function useAssignments(
 
       if (!res.ok) throw new Error(`Scheduler responded ${res.status}`)
       const json = await res.json()
-      if (json.status === 'error') throw new Error(json.message)
+      if (json.status === 'error') throw new Error(json.manager_message ?? 'Erreur inconnue')
 
       await supabase.from('assignments').delete().eq('schedule_month_id', monthId)
       const rows = (json.assignments as Array<{ employee_id: string; shift_type_id: string; date: string }>).map(
@@ -117,10 +119,13 @@ export function useAssignments(
       )
       const { error } = await supabase.from('assignments').insert(rows)
       if (error) throw error
+
+      return json.manager_message as string | null
     },
-    onSuccess: () => {
+    onSuccess: (managerMessage) => {
       notifications.show({ color: 'green', message: 'Planning généré (OR-Tools) !' })
       queryClient.invalidateQueries({ queryKey: ['assignments', monthId] })
+      if (managerMessage) setCompromiseMessage(managerMessage)
     },
     onError: (error: Error) => {
       notifications.show({ color: 'red', message: error.message })
@@ -165,6 +170,8 @@ export function useAssignments(
   return {
     assignments,
     isLoading,
+    compromiseMessage,
+    dismissCompromise: () => setCompromiseMessage(null),
     generate: generateMutation.mutate,
     generateWithPython: generateWithPythonMutation.mutate,
     remove: removeMutation.mutate,
