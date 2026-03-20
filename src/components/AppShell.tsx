@@ -1,12 +1,13 @@
 import { AppShell, NavLink, Title, Button } from '@mantine/core'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { IconCalendar, IconUsers, IconClock, IconLogout } from '@tabler/icons-react'
+import { IconCalendar, IconUsers, IconClock, IconLogout, IconShield } from '@tabler/icons-react'
 import { supabase } from '../lib/supabase'
 
 const navItems = [
   { label: 'Planning', path: '/dashboard', icon: IconCalendar },
   { label: 'Employés', path: '/employees', icon: IconUsers },
   { label: 'Types de shifts', path: '/shift-types', icon: IconClock },
+  { label: 'Rôles', path: '/roles', icon: IconShield },
 ]
 
 export function ManagerShell({ children }: { children: React.ReactNode }) {

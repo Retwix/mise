@@ -7,6 +7,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { MonthPage } from "./pages/MonthPage";
 import { PlanningPage } from "./pages/PlanningPage";
 import { ShiftTypesPage } from "./pages/ShiftTypesPage";
+import { RolesPage } from "./pages/RolesPage";
 
 export function App() {
 	return (
@@ -21,6 +22,7 @@ export function App() {
 					<Route path="/month/:monthId" element={<MonthPage />} />
 					<Route path="/employees" element={<EmployeesPage />} />
 					<Route path="/shift-types" element={<ShiftTypesPage />} />
+				<Route path="/roles" element={<RolesPage />} />
 				</Route>
 
 				<Route path="*" element={<Navigate to="/login" replace />} />
