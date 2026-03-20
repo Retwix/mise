@@ -1,30 +1,33 @@
 import { useEffect, useState } from 'react'
-import { Table, Button, Group, TextInput, Modal, Stack, Title, ActionIcon, CopyButton, Tooltip, Badge, Text, NumberInput } from '@mantine/core'
+import { Table, Button, Group, TextInput, Modal, Stack, Title, ActionIcon, CopyButton, Tooltip, Badge, Text, NumberInput, Select } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { notifications } from '@mantine/notifications'
 import { IconPlus, IconTrash, IconCopy, IconCheck } from '@tabler/icons-react'
 import dayjs from 'dayjs'
 import { supabase } from '../lib/supabase'
 import { ManagerShell } from '../components/AppShell'
-import type { Employee } from '../types'
+import type { Employee, Role } from '../types'
 
 export function EmployeesPage() {
   const [employees, setEmployees] = useState<Employee[]>([])
   const [respondedIds, setRespondedIds] = useState<Set<string>>(new Set())
+  const [roles, setRoles] = useState<Role[]>([])
   const [modalOpen, setModalOpen] = useState(false)
 
-  const form = useForm({ initialValues: { name: '', email: '', phone: '', max_shifts_per_month: null as number | null } })
+  const form = useForm({ initialValues: { name: '', email: '', phone: '', max_shifts_per_month: null as number | null, role_id: null as string | null } })
 
   // Next month prefix e.g. "2026-03"
   const nextMonthPrefix = dayjs().add(1, 'month').format('YYYY-MM')
 
   async function load() {
-    const [{ data: emps }, { data: avails }] = await Promise.all([
+    const [{ data: emps }, { data: avails }, { data: roleRows }] = await Promise.all([
       supabase.from('employees').select('*').order('name'),
       supabase.from('availabilities').select('employee_id').like('date', `${nextMonthPrefix}-%`),
+      supabase.from('roles').select('*').order('name'),
     ])
     setEmployees(emps ?? [])
     setRespondedIds(new Set((avails ?? []).map((a: { employee_id: string }) => a.employee_id)))
+    setRoles(roleRows ?? [])
   }
 
   useEffect(() => { load() }, [])
@@ -35,6 +38,7 @@ export function EmployeesPage() {
       email: values.email || null,
       phone: values.phone || null,
       max_shifts_per_month: values.max_shifts_per_month,
+      role_id: values.role_id,
     })
     if (error) { notifications.show({ color: 'red', message: error.message }); return }
     notifications.show({ color: 'green', message: 'Employé ajouté' })
@@ -74,6 +78,7 @@ export function EmployeesPage() {
             <Table.Th>Dispos</Table.Th>
             <Table.Th>Lien dispos</Table.Th>
             <Table.Th>Lien planning</Table.Th>
+            <Table.Th>Rôle</Table.Th>
             <Table.Th>Max/mois</Table.Th>
             <Table.Th></Table.Th>
           </Table.Tr>
@@ -122,6 +127,23 @@ export function EmployeesPage() {
                 </CopyButton>
               </Table.Td>
               <Table.Td>
+                <Select
+                  value={emp.role_id ?? ''}
+                  placeholder="—"
+                  clearable
+                  size="xs"
+                  w={120}
+                  data={roles.map(r => ({ value: r.id, label: r.name }))}
+                  onChange={async (val) => {
+                    await supabase
+                      .from('employees')
+                      .update({ role_id: val || null })
+                      .eq('id', emp.id)
+                    load()
+                  }}
+                />
+              </Table.Td>
+              <Table.Td>
                 <NumberInput
                   value={emp.max_shifts_per_month ?? ''}
                   min={1}
@@ -154,6 +176,13 @@ export function EmployeesPage() {
             <TextInput label="Nom" {...form.getInputProps('name')} required />
             <TextInput label="Email" {...form.getInputProps('email')} />
             <TextInput label="Téléphone" {...form.getInputProps('phone')} />
+            <Select
+              label="Rôle"
+              placeholder="Aucun rôle"
+              clearable
+              data={roles.map(r => ({ value: r.id, label: r.name }))}
+              {...form.getInputProps('role_id')}
+            />
             <NumberInput
               label="Max shifts / mois"
               description="Laisser vide pour aucune limite"
