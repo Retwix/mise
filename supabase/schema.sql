@@ -24,7 +24,10 @@ create table employees (
   created_at timestamptz default now(),
   max_shifts_per_month integer,
   role_id uuid references roles(id) on delete set null,
-  job_id  uuid references jobs(id)  on delete set null
+  job_id  uuid references jobs(id)  on delete set null,
+  role text check (role in ('cook', 'waiter', 'barman')),
+  weekly_contract_hours float,
+  team text check (team in ('A', 'B')) default 'A'
 );
 
 -- Shift types (e.g. "Ouverture 12h-15h", "Fermeture 18h-23h")
@@ -33,10 +36,11 @@ create table shift_types (
   label text not null,
   start_time text not null, -- "12:00"
   end_time text not null,   -- "15:00"
-  required_count int not null default 1,
+  default_required_cooks int not null default 0,
+  default_required_waiters int not null default 0,
+  default_required_barmen int not null default 0,
   is_closing boolean not null default false,
   created_at timestamptz default now(),
-  max_shifts_per_month integer,
   job_id uuid references jobs(id) on delete set null
 );
 

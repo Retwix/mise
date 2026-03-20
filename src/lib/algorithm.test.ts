@@ -3,12 +3,12 @@ import { describe, it, expect } from 'vitest'
 import { generateSchedule } from './algorithm'
 import type { Employee, ShiftType, Availability, Role } from '../types'
 
-const emp1: Employee = { id: 'e1', name: 'Alice', email: null, phone: null, token_dispo: 't1', token_view: 'v1', created_at: '', max_shifts_per_month: null, role_id: null, job_id: null }
-const emp2: Employee = { id: 'e2', name: 'Bob',   email: null, phone: null, token_dispo: 't2', token_view: 'v2', created_at: '', max_shifts_per_month: null, role_id: null, job_id: null }
-const emp3: Employee = { id: 'e3', name: 'Carol', email: null, phone: null, token_dispo: 't3', token_view: 'v3', created_at: '', max_shifts_per_month: null, role_id: null, job_id: null }
+const emp1: Employee = { id: 'e1', name: 'Alice', email: null, phone: null, token_dispo: 't1', token_view: 'v1', created_at: '', max_shifts_per_month: null, role_id: null, job_id: null, role: 'waiter', weekly_contract_hours: 35, team: 'A' }
+const emp2: Employee = { id: 'e2', name: 'Bob',   email: null, phone: null, token_dispo: 't2', token_view: 'v2', created_at: '', max_shifts_per_month: null, role_id: null, job_id: null, role: 'waiter', weekly_contract_hours: 35, team: 'B' }
+const emp3: Employee = { id: 'e3', name: 'Carol', email: null, phone: null, token_dispo: 't3', token_view: 'v3', created_at: '', max_shifts_per_month: null, role_id: null, job_id: null, role: 'waiter', weekly_contract_hours: 35, team: 'A' }
 
-const closing: ShiftType = { id: 's1', label: 'Fermeture', start_time: '18:00', end_time: '23:00', required_count: 2, is_closing: true, created_at: '', job_id: null }
-const opening: ShiftType = { id: 's2', label: 'Ouverture', start_time: '12:00', end_time: '15:00', required_count: 1, is_closing: false, created_at: '', job_id: null }
+const closing: ShiftType = { id: 's1', label: 'Fermeture', start_time: '18:00', end_time: '23:00', default_required_cooks: 0, default_required_waiters: 2, default_required_barmen: 0, is_closing: true, created_at: '', job_id: null }
+const opening: ShiftType = { id: 's2', label: 'Ouverture', start_time: '12:00', end_time: '15:00', default_required_cooks: 0, default_required_waiters: 1, default_required_barmen: 0, is_closing: false, created_at: '', job_id: null }
 
 describe('generateSchedule', () => {
   it('assigns required_count employees per shift per day', () => {

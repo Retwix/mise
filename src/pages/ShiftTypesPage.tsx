@@ -12,7 +12,7 @@ export function ShiftTypesPage() {
   const [modalOpen, setModalOpen] = useState(false)
 
   const form = useForm({
-    initialValues: { label: '', start_time: '', end_time: '', required_count: 1, is_closing: false },
+    initialValues: { label: '', start_time: '', end_time: '', default_required_cooks: 0, default_required_waiters: 0, default_required_barmen: 0, is_closing: false },
   })
 
   async function load() {
@@ -49,7 +49,9 @@ export function ShiftTypesPage() {
             <Table.Th>Label</Table.Th>
             <Table.Th>Début</Table.Th>
             <Table.Th>Fin</Table.Th>
-            <Table.Th>Postes requis</Table.Th>
+            <Table.Th>Cuisiniers</Table.Th>
+            <Table.Th>Serveurs</Table.Th>
+            <Table.Th>Barmans</Table.Th>
             <Table.Th>Fermeture</Table.Th>
             <Table.Th></Table.Th>
           </Table.Tr>
@@ -60,7 +62,9 @@ export function ShiftTypesPage() {
               <Table.Td>{st.label}</Table.Td>
               <Table.Td>{st.start_time}</Table.Td>
               <Table.Td>{st.end_time}</Table.Td>
-              <Table.Td>{st.required_count}</Table.Td>
+              <Table.Td>{st.default_required_cooks}</Table.Td>
+              <Table.Td>{st.default_required_waiters}</Table.Td>
+              <Table.Td>{st.default_required_barmen}</Table.Td>
               <Table.Td>{st.is_closing ? 'Oui' : 'Non'}</Table.Td>
               <Table.Td>
                 <ActionIcon color="red" variant="subtle" onClick={() => handleDelete(st.id)}>
@@ -78,7 +82,9 @@ export function ShiftTypesPage() {
             <TextInput label="Label" {...form.getInputProps('label')} required />
             <TextInput label="Heure début (ex: 12:00)" {...form.getInputProps('start_time')} required />
             <TextInput label="Heure fin (ex: 15:00)" {...form.getInputProps('end_time')} required />
-            <NumberInput label="Postes requis" min={1} {...form.getInputProps('required_count')} />
+            <NumberInput label="Cuisiniers requis" min={0} {...form.getInputProps('default_required_cooks')} />
+            <NumberInput label="Serveurs requis" min={0} {...form.getInputProps('default_required_waiters')} />
+            <NumberInput label="Barmans requis" min={0} {...form.getInputProps('default_required_barmen')} />
             <Switch label="C'est une fermeture" {...form.getInputProps('is_closing', { type: 'checkbox' })} />
             <Button type="submit">Ajouter</Button>
           </Stack>

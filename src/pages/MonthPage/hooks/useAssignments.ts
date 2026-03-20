@@ -74,11 +74,9 @@ export function useAssignments(
         employees: employees.map((e) => ({
           id: e.id,
           name: e.name,
-          // role and weekly_contract_hours are not yet in the DB schema;
-          // they will be populated once those columns are added to employees.
-          role: 'waiter',
-          weekly_contract_hours: 35,
-          team: 'A',
+          role: e.role ?? 'waiter',
+          weekly_contract_hours: e.weekly_contract_hours ?? 35,
+          team: e.team ?? 'A',
         })),
         shift_types: shiftTypes.map((s) => ({
           id: s.id,
@@ -86,10 +84,9 @@ export function useAssignments(
           start_hour: parseHour(s.start_time),
           end_hour: parseHour(s.end_time),
           is_closing: s.is_closing,
-          // required_count covers all roles; headcount splits come from shift_requirements
-          default_required_cooks: 0,
-          default_required_waiters: s.required_count,
-          default_required_barmen: 0,
+          default_required_cooks: s.default_required_cooks,
+          default_required_waiters: s.default_required_waiters,
+          default_required_barmen: s.default_required_barmen,
         })),
         shift_requirements: shiftRequirements.map((r) => ({
           shift_type_id: r.shift_type_id,

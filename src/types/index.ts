@@ -22,6 +22,9 @@ export type Employee = {
   max_shifts_per_month: number | null
   role_id: string | null
   job_id: string | null
+  role: 'cook' | 'waiter' | 'barman' | null
+  weekly_contract_hours: number | null
+  team: 'A' | 'B' | null
 }
 
 export type ShiftType = {
@@ -29,7 +32,9 @@ export type ShiftType = {
   label: string
   start_time: string
   end_time: string
-  required_count: number
+  default_required_cooks: number
+  default_required_waiters: number
+  default_required_barmen: number
   is_closing: boolean
   created_at: string
   job_id: string | null

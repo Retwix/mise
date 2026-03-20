@@ -68,9 +68,9 @@ export function ScheduleGrid({
 															</Badge>
 														);
 													})}
-													{shiftAssigns.length < st.required_count && (
+													{shiftAssigns.length < (st.default_required_cooks + st.default_required_waiters + st.default_required_barmen) && (
 														<Text size="xs" c="red">
-															{st.required_count - shiftAssigns.length} poste(s)
+															{(st.default_required_cooks + st.default_required_waiters + st.default_required_barmen) - shiftAssigns.length} poste(s)
 															manquant(s)
 														</Text>
 													)}

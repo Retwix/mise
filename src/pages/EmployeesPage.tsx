@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Table, Button, Group, TextInput, Modal, Stack, Title, ActionIcon, CopyButton, Tooltip, Badge, Text, NumberInput, Select } from '@mantine/core'
+import { Table, Button, Group, TextInput, Modal, Stack, Title, ActionIcon, CopyButton, Tooltip, Badge, Text, NumberInput, Select, SegmentedControl } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { notifications } from '@mantine/notifications'
 import { IconPlus, IconTrash, IconCopy, IconCheck } from '@tabler/icons-react'
@@ -14,7 +14,7 @@ export function EmployeesPage() {
   const [roles, setRoles] = useState<Role[]>([])
   const [modalOpen, setModalOpen] = useState(false)
 
-  const form = useForm({ initialValues: { name: '', email: '', phone: '', max_shifts_per_month: null as number | null, role_id: null as string | null } })
+  const form = useForm({ initialValues: { name: '', email: '', phone: '', max_shifts_per_month: null as number | null, role_id: null as string | null, role: '' as string, weekly_contract_hours: null as number | null, team: 'A' as string } })
 
   // Next month prefix e.g. "2026-03"
   const nextMonthPrefix = dayjs().add(1, 'month').format('YYYY-MM')
@@ -39,6 +39,9 @@ export function EmployeesPage() {
       phone: values.phone || null,
       max_shifts_per_month: values.max_shifts_per_month,
       role_id: values.role_id,
+      role: values.role || null,
+      weekly_contract_hours: values.weekly_contract_hours,
+      team: values.team,
     })
     if (error) { notifications.show({ color: 'red', message: error.message }); return }
     notifications.show({ color: 'green', message: 'Employé ajouté' })
@@ -74,6 +77,9 @@ export function EmployeesPage() {
         <Table.Thead>
           <Table.Tr>
             <Table.Th>Nom</Table.Th>
+            <Table.Th>Poste</Table.Th>
+            <Table.Th>Heures/sem</Table.Th>
+            <Table.Th>Équipe</Table.Th>
             <Table.Th>Email</Table.Th>
             <Table.Th>Dispos</Table.Th>
             <Table.Th>Lien dispos</Table.Th>
@@ -87,6 +93,50 @@ export function EmployeesPage() {
           {employees.map(emp => (
             <Table.Tr key={emp.id}>
               <Table.Td>{emp.name}</Table.Td>
+              <Table.Td>
+                <Select
+                  value={emp.role ?? ''}
+                  placeholder="—"
+                  clearable
+                  size="xs"
+                  w={100}
+                  data={[
+                    { value: 'cook', label: 'Cuisinier' },
+                    { value: 'waiter', label: 'Serveur' },
+                    { value: 'barman', label: 'Barman' },
+                  ]}
+                  onChange={async (val) => {
+                    await supabase.from('employees').update({ role: val || null }).eq('id', emp.id)
+                    load()
+                  }}
+                />
+              </Table.Td>
+              <Table.Td>
+                <NumberInput
+                  value={emp.weekly_contract_hours ?? ''}
+                  min={1}
+                  max={48}
+                  placeholder="—"
+                  w={70}
+                  size="xs"
+                  styles={{ input: { textAlign: 'center' } }}
+                  onChange={async (val) => {
+                    await supabase.from('employees').update({ weekly_contract_hours: val === '' ? null : Number(val) }).eq('id', emp.id)
+                    load()
+                  }}
+                />
+              </Table.Td>
+              <Table.Td>
+                <SegmentedControl
+                  value={emp.team ?? 'A'}
+                  size="xs"
+                  data={['A', 'B']}
+                  onChange={async (val) => {
+                    await supabase.from('employees').update({ team: val }).eq('id', emp.id)
+                    load()
+                  }}
+                />
+              </Table.Td>
               <Table.Td>{emp.email ?? '—'}</Table.Td>
               <Table.Td>
                 {respondedIds.has(emp.id)
@@ -174,6 +224,18 @@ export function EmployeesPage() {
         <form onSubmit={form.onSubmit(handleAdd)}>
           <Stack>
             <TextInput label="Nom" {...form.getInputProps('name')} required />
+            <Select
+              label="Poste"
+              placeholder="Sélectionner"
+              data={[
+                { value: 'cook', label: 'Cuisinier' },
+                { value: 'waiter', label: 'Serveur' },
+                { value: 'barman', label: 'Barman' },
+              ]}
+              {...form.getInputProps('role')}
+            />
+            <NumberInput label="Heures contractuelles / semaine" min={1} max={48} {...form.getInputProps('weekly_contract_hours')} />
+            <Select label="Équipe" data={['A', 'B']} {...form.getInputProps('team')} />
             <TextInput label="Email" {...form.getInputProps('email')} />
             <TextInput label="Téléphone" {...form.getInputProps('phone')} />
             <Select

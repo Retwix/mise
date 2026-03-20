@@ -48,7 +48,8 @@ export function generateSchedule(
         return totalCounts[a.id] - totalCounts[b.id]
       })
 
-      const assigned = sorted.slice(0, shift.required_count)
+      const needed = shift.default_required_cooks + shift.default_required_waiters + shift.default_required_barmen
+      const assigned = sorted.slice(0, needed)
 
       for (const emp of assigned) {
         result.push({ employee_id: emp.id, date, shift_type_id: shift.id })
